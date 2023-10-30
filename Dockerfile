@@ -9,16 +9,16 @@
 # # Download and install XMOS XTC Tools
 
 # # # Currently can't run wget as XMOS requires a login to download the tar
-# # RUN wget https://www.xmos.com/download/$XTC_TOOLS_SOURCE
+# # RUN wget https://www.xmos.com/download/${XTC_TOOLS_SOURCE
 
-# COPY $XTC_TOOLS_SOURCE .
-# RUN tar -xzf $XTC_TOOLS_SOURCE -C /opt
-# RUN rm $XTC_TOOLS_SOURCE
+# COPY ${XTC_TOOLS_SOURCE .
+# RUN tar -xzf ${XTC_TOOLS_SOURCE -C /opt
+# RUN rm ${XTC_TOOLS_SOURCE
 
 # # Add XCORE VOICE SDK REPOSITORY FOLDER:
-# COPY $XCORE_VOICE_SOURCE /opt/XMOS
-# RUN tar -xzf $XCORE_VOICE_SOURCE -C /opt/XMOS
-# RUN rm $XCORE_VOICE_SOURCE
+# COPY ${XCORE_VOICE_SOURCE /opt/XMOS
+# RUN tar -xzf ${XCORE_VOICE_SOURCE -C /opt/XMOS
+# RUN rm ${XCORE_VOICE_SOURCE
 
 # # # Clone XMOS SDK
 # # # Build XMOS SDK
@@ -62,21 +62,35 @@ ARG XCORE_VOICE_SOURCE=sln_voice.tgz
 
 # Add XMOS XTC Tools
 
-COPY $XTC_TOOLS_SOURCE .
-RUN tar -xzf $XTC_TOOLS_SOURCE -C /opt
-RUN rm $XTC_TOOLS_SOURCE
+COPY ${XTC_TOOLS_SOURCE} .
+RUN tar -xzf ${XTC_TOOLS_SOURCE} -C /opt
+RUN rm ${XTC_TOOLS_SOURCE}
 
 # Add XCORE VOICE SDK REPOSITORY FOLDER:
-COPY $XCORE_VOICE_SOURCE .
-RUN tar -xzf $XCORE_VOICE_SOURCE -C /opt/XMOS
-RUN rm $XCORE_VOICE_SOURCE
+COPY ${XCORE_VOICE_SOURCE} .
+RUN tar -xzf ${XCORE_VOICE_SOURCE} -C /opt/XMOS
+RUN rm ${XCORE_VOICE_SOURCE}
 # Your production build commands here
 
 # Install essential build tools
-RUN apt-get update && apt-get install -y build-essential git 
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    git \
+    dfu-util \
+    usbutils \
+    procps \
+    libncurses5 \
+    && apt-get clean autoclean
 
 # Add XTC Tools SetEnv to .bashrc
-RUN echo "source /opt/XMOS/XTC/SetEnv" >> ~/.bashrc
+RUN echo "cd /opt/XMOS/XTC/${XTC_TOOLS_VERSION}" >> ~/.bashrc
+RUN echo "source SetEnv" >> ~/.bashrc
+RUN echo "cd /" >> ~/.bashrc
+
+# Setup USB drivers
+WORKDIR /opt/XMOS/XTC/${XTC_TOOLS_VERSION}/scripts
+RUN ./setup_xmos_devices.sh
+WORKDIR /
 
 # Entry point
 CMD ["/bin/bash"]
