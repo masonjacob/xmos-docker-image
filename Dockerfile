@@ -52,11 +52,14 @@
 # Stage 2: Create a production image
 FROM ubuntu:latest
 
+# Use a mirror from a specific region (had to use this when build was failing at apt-get installs)
+# RUN sed -i 's/http:\/\/archive.ubuntu.com/http:\/\/us.archive.ubuntu.com/' /etc/apt/sources.list
+
 # # Copy necessary files from the builder stage
 # COPY --from=builder /opt /opt
 
 # Define docker-compose build arguments
-ARG XTC_TOOLS_SOURCE=Tools-15---Linux-64_15_1_4.tgz
+ARG XTC_TOOLS_SOURCE=Tools-15---Linux-64_15_2_1.tgz
 ARG XTC_TOOLS_VERSION=15.1.4
 ARG XCORE_VOICE_SOURCE=sln_voice.tgz
 
@@ -70,27 +73,41 @@ RUN rm ${XTC_TOOLS_SOURCE}
 COPY ${XCORE_VOICE_SOURCE} .
 RUN tar -xzf ${XCORE_VOICE_SOURCE} -C /opt/XMOS
 RUN rm ${XCORE_VOICE_SOURCE}
-# Your production build commands here
 
 # Install essential build tools
-RUN apt-get update && apt-get install -y \
+# RUN apt-get update
+# RUN apt-get install -y build-essential
+# RUN apt-get install -y git
+# RUN apt-get install -y udev
+# RUN apt-get install -y dfu-util
+# RUN apt-get install -y usbutils
+# RUN apt-get install -y procps
+# RUN apt-get install -y libncurses5
+# RUN apt-get clean autoclean
+RUN apt-get install -y \
+    systemctl \
     build-essential \
+    cmake \
     git \
+    udev \
     dfu-util \
     usbutils \
     procps \
     libncurses5 \
     && apt-get clean autoclean
 
+# # Reload udev:
+# RUN service udev start
+
 # Add XTC Tools SetEnv to .bashrc
 RUN echo "cd /opt/XMOS/XTC/${XTC_TOOLS_VERSION}" >> ~/.bashrc
 RUN echo "source SetEnv" >> ~/.bashrc
 RUN echo "cd /" >> ~/.bashrc
 
-# Setup USB drivers
-WORKDIR /opt/XMOS/XTC/${XTC_TOOLS_VERSION}/scripts
-RUN ./setup_xmos_devices.sh
-WORKDIR /
+# # Setup USB drivers
+# WORKDIR /opt/XMOS/XTC/${XTC_TOOLS_VERSION}/scripts
+# RUN ./setup_xmos_devices.sh
+# WORKDIR /
 
 # Entry point
 CMD ["/bin/bash"]
