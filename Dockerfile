@@ -60,7 +60,7 @@ FROM ubuntu:latest
 
 # Define docker-compose build arguments
 ARG XTC_TOOLS_SOURCE=Tools-15---Linux-64_15_2_1.tgz
-ARG XTC_TOOLS_VERSION=15.1.4
+ARG XTC_TOOLS_VERSION=15.2.1
 ARG XCORE_VOICE_SOURCE=sln_voice.tgz
 
 # Add XMOS XTC Tools
@@ -84,12 +84,11 @@ RUN rm ${XCORE_VOICE_SOURCE}
 # RUN apt-get install -y procps
 # RUN apt-get install -y libncurses5
 # RUN apt-get clean autoclean
-RUN apt-get install -y \
+RUN apt-get update && apt-get install -y \
     systemctl \
     build-essential \
     cmake \
     git \
-    udev \
     dfu-util \
     usbutils \
     procps \
