@@ -102,7 +102,7 @@ RUN apt-get install -y \
 # Add XTC Tools SetEnv to .bashrc
 RUN echo "cd /opt/XMOS/XTC/${XTC_TOOLS_VERSION}" >> ~/.bashrc
 RUN echo "source SetEnv" >> ~/.bashrc
-RUN echo "cd /" >> ~/.bashrc
+RUN echo "cd /home/src" >> ~/.bashrc
 
 # # Setup USB drivers
 # WORKDIR /opt/XMOS/XTC/${XTC_TOOLS_VERSION}/scripts
