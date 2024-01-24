@@ -94,7 +94,7 @@ RUN apt-get update && apt-get install -y \
     usbutils \
     procps \
     libncurses5 \
-    python 3.9 \
+    python3.9 \
     python3-pip \
     libusb-1.0-0-dev \
     && apt-get clean autoclean
