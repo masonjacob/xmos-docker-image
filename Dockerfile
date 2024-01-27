@@ -66,13 +66,14 @@ ARG XCORE_VOICE_SOURCE=sln_voice.tgz
 # Add XMOS XTC Tools
 
 COPY ${XTC_TOOLS_SOURCE} .
-RUN tar -xzf ${XTC_TOOLS_SOURCE} -C /opt
+RUN tar -xzf ${XTC_TOOLS_SOURCE} -C /opt/xmos
 RUN rm ${XTC_TOOLS_SOURCE}
 
 # Add XCORE VOICE SDK REPOSITORY FOLDER:
 COPY ${XCORE_VOICE_SOURCE} .
-RUN tar -xzf ${XCORE_VOICE_SOURCE} -C /opt/XMOS
+RUN tar -xzf ${XCORE_VOICE_SOURCE} -C /opt/xmos
 RUN rm ${XCORE_VOICE_SOURCE}
+COPY setup.sh /opt/xmos/sln_voice
 
 # Install essential build tools
 # RUN apt-get update
