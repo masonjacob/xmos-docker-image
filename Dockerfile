@@ -74,6 +74,7 @@ RUN rm ${XTC_TOOLS_SOURCE}
 COPY ${XCORE_VOICE_SOURCE} .
 RUN tar -xzf ${XCORE_VOICE_SOURCE}
 RUN rm ${XCORE_VOICE_SOURCE}
+WORKDIR /opt/xmos/sln_voice
 COPY setup.sh .
 RUN chmod u+x setup.sh
 
@@ -108,7 +109,7 @@ RUN apt-get update && apt-get install -y \
 # RUN service udev start
 
 # Add XTC Tools SetEnv to .bashrc
-RUN echo "cd /opt/XMOS/XTC/${XTC_TOOLS_VERSION}" >> ~/.bashrc
+RUN echo "cd /opt/xmos/XTC/${XTC_TOOLS_VERSION}" >> ~/.bashrc
 RUN echo "source SetEnv" >> ~/.bashrc
 RUN echo "cd /" >> ~/.bashrc
 
